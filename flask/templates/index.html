@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Lucas' webserver</title>
+        <link rel="shortcut icon" href="https://www.svgrepo.com/show/88703/api.svg">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <style>
+            pre code {
+                white-space: pre-wrap; /* Ensures proper indentation */
+                word-wrap: break-word; /* Handles long lines gracefully */
+            }
+        </style>
+    </head>
+    <body>
+        <h1>HTTPS Flask App from Lucas' webserver</h1>
+        <ul>
+            <li><a href="https://lb-webserver.pro:8501">lb-webserver.pro:8501</a> Sample Size Calculator</li>
+            <li><a href="https://lb-webserver.pro:8504">lb-webserver.pro:8504</a> Jenkins</li>
+            <li><a href="https://lb-webserver.pro:8502">lb-webserver.pro:8502</a> Flask App</li>
+        </ul>
+
+        <h2>API Usage Example (Python)</h2>
+        <h3>Authentication File</h3>
+        <p>'~/aws/auth_flask.json'</p>
+        <pre><code class="json">
+{
+    "prod": {
+        "user": "admin",
+        "password": "password"
+    }
+}
+        </code></pre>
+
+        <h3>GET Request</h3>
+        <pre><code class="python">
+import json
+import requests
+from requests.auth import HTTPBasicAuth
+
+PATH_AUTH = '~/aws/auth_flask.json'
+with open(f'{PATH_AUTH}', 'r') as file:
+    json_api_key = json.load(file)
+
+url = "https://lb-webserver.pro:8502/"
+response = requests.get(url, auth=HTTPBasicAuth(json_api_key['prod']['user'], json_api_key['prod']['password']))
+print(response)
+        </code></pre>
+        <pre><code class="python"> > Response [200] </code></pre>
+        <h3>POST Request</h3>
+        <pre><code class="python">
+import json
+import requests
+from requests.auth import HTTPBasicAuth
+
+data = {
+    "Feature_1": 1.0,
+    "Feature_2": 1.0,
+    "Feature_3": 1.0,
+    "Feature_4": 1.0
+}
+
+url = "https://lb-webserver.pro:8502/predict"
+response = requests.post(
+    url=url,
+    json=data,
+    auth=HTTPBasicAuth(json_api_key['prod']['user'], json_api_key['prod']['password'])
+)
+print(response.json())
+        </code></pre>
+        <pre><code class="python"> > {"model_name":"random_forest_model","score":0.99} </code></pre>
+    </body>
+</html>
